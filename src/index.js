@@ -10,22 +10,24 @@ class App extends React.Component {
         //this is the only time we do direct assignment to this.state
         this.state = { lat: null, errorMessage: '' };//initializing state, null for default value    
     }*/
-    state = { lat: null, errorMessage: '' };
+    state = { lat: null, lon: null, errorMessage: '' };
 
-    componentDidMount() {
-        window.navigator.geolocation.getCurrentPosition(
-            position => this.setState({ lat: position.coords.latitude }),//to update the state, only setState() function is used
-            err => this.setState({ errorMessage: err.message })
-        );
+    
+
+    componentDidMount() {        
+        window.navigator.geolocation.getCurrentPosition(            
+            position => this.setState({ lat: position.coords.latitude, lon: position.coords.longitude }),//to update the state, only setState() function is used
+            err => this.setState({ errorMessage: err.message })            
+        );                      
     }    
-
+    
     renderContent() {
         if(this.state.errorMessage && !this.state.lat){
             return <div>Error: {this.state.errorMessage} </div>;
         }
 
-        if(!this.state.errorMessage && this.state.lat){
-            return <SeasonDisplay lat={this.state.lat} />
+        if(!this.state.errorMessage && this.state.lat){ 
+            return <SeasonDisplay lat={this.state.lat} lon={this.state.lon} />            
         }
 
         return <Spinner message="Please accept location request" />;
